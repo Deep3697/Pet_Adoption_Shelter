@@ -21,6 +21,7 @@ void display_MainMenu(const User &current_User){     //if const not used there w
         cout<<"Enter Your Choice:";
         return;
     }
+    
     cout<<"------- MAIN MENU-------"<<endl;
     cout<<
     "1. Pet Management"<<endl<<
