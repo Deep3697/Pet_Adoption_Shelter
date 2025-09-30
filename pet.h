@@ -107,7 +107,7 @@ public:
     AdoptionShelter(const User& user);
     ~AdoptionShelter(); 
 
-    void showPetManagementMenu(const User &current_User);
+    void showPetManagementMenu();
    
 
 };

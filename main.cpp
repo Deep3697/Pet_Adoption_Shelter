@@ -46,8 +46,8 @@ void display_MainMenu(const User &current_User){     //if const not used there w
 
 int main(){
     Authentication auth_User;
-
     User current_User=auth_User.login();
+    AdoptionShelter shelter(current_User);
 
     if(current_User.role==INVALID){
         cout<<"ERROR..Invalid Username! or Password is Incorrect!"<<endl;
@@ -78,35 +78,35 @@ int main(){
         if(current_User.role==Manager){
             switch(choice){
                 case 1:
-                showPetManagementMenu(current_User);
-                break;
-            case 2:
-                //People Management
-                break;
-            case 3:
-                //Adoption Workflow
-                break;
-            case 4:
-                //Facility Management
-                break;
-            case 5:
-                //Inventory & Financials
-                break;
-            case 6:
-                //Events & Fostering
-                break;
-            case 7:
-                //Lost & Found
-                break;
-            case 8:
-                //Reports & Analytics
-                break;
-            case 9:
-                //Exit
-                break;
-            default:
-                //ERROR
-                break;
+                    shelter.showPetManagementMenu();
+                    break;
+                case 2:
+                    //People Management
+                    break;
+                case 3:
+                    //Adoption Workflow
+                    break;
+                case 4:
+                    //Facility Management
+                    break;
+                case 5:
+                    //Inventory & Financials
+                    break;
+                case 6:
+                    //Events & Fostering
+                    break;
+                case 7:
+                    //Lost & Found
+                    break;
+                case 8:
+                    //Reports & Analytics
+                    break;
+                case 9:
+                    //Exit
+                    break;
+                default:
+                    //ERROR
+                    break;
             }
         }
         else if(current_User.role==Staff){
