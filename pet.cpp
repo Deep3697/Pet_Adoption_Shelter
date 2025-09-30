@@ -1,4 +1,6 @@
 #include<bits/stdc++.h>
+#include<chrono>
+#include<ctime>
 using namespace std;
 
 #include "pet.h"
@@ -152,15 +154,15 @@ void AdoptionShelter::listPets() {
         });
 
         cout << "\n--- "<< species <<" ---" << endl;
-        cout << "-----------------------------------------------------------------" << endl;
+        cout << "----------------------------------------------------------------------------------------" << endl;
         cout << left << setw(10) << "ID" << setw(20) << "Name" << setw(15) << "Species" << setw(20) << "Breed" << setw(5) << "Age" << endl;
-        cout << "-----------------------------------------------------------------" << endl;
+        cout << "----------------------------------------------------------------------------------------" << endl;
 
         for (Pet* pet : speciesPets) {
             pet->displayDetails();
         }
     }
-    cout << "-----------------------------------------------------------------" << endl;
+    cout << "----------------------------------------------------------------------------------------------" << endl;
 }
 
 
@@ -207,7 +209,7 @@ void AdoptionShelter::addPet() {
     else if (species == "Horse") pets.push_back(new Horse(id, name, breed, age));
     else if (species == "Turtle") pets.push_back(new Turtle(id, name, breed, age));
     else if (species == "Rabbit") pets.push_back(new Rabbit(id, name, breed, age));
-    cout << "\nSuccess: Pet added to memory.Changes will be saved on exit." << endl;
+    cout << "\n Pet added to memory Successfully!" << endl;
 }
 
 void AdoptionShelter::editPetDetails() {
@@ -232,6 +234,106 @@ void AdoptionShelter::editPetDetails() {
         }
     }
     cout << "\nSorry, no pet found with ID: " << searchId << endl;
+}
+
+void AdoptionShelter::storeInLogBook(Pet* pet,const string& activity){
+    ofstream logFile("interactions.csv",ios::app);
+    if(logFile.is_open()){
+        logFile<<pet->getID()<<","<<pet->getNAME()<<",\""<<activity<<"\","<<current_User.id<<","<<current_User.name<<"\n";
+        logFile.close();
+    }
+}
+
+Pet* AdoptionShelter::findPetById(const string& id){
+    for(Pet* pet:pets){
+        if(pet->getID()==id){
+            return pet;
+        }
+    }
+    return NULL;
+}
+
+void AdoptionShelter::InteractionwithPets(){
+    string searchId;
+    cout<<"\nEnter the ID of the pet you want to interact with: ";
+    cin>>searchId;
+    cin.ignore(numeric_limits<streamsize>::max(),'\n');
+    Pet* pet=findPetById(searchId);
+    if(pet==nullptr){
+        cout<<"Sorry, no pet found with ID: "<<searchId<<endl;
+        return;
+    }
+
+    string species=pet->getSPECIES();
+    int choice=0;
+    while(true){
+        system("cls");
+        cout<<"--- Interaction Session with "<<pet->getNAME()<<" ("<<species<<") ---\n";
+        // --- DOG MENU ---
+        if(species=="Dog"){
+            cout<<"1. Walk the dog (20 mins)\n2. Play fetch\n3. Feed the dog\n4. Finish Session\nChoice: ";
+            cin>>choice;
+            switch(choice){
+                case 1: storeInLogBook(pet,"Walked for 20 minutes"); cout<<"You take "<<pet->getNAME()<<" for a nice walk.\n"; break;
+                case 2: storeInLogBook(pet,"Played fetch"); cout<<pet->getNAME()<<" happily chases the ball!\n"; pet->makeSound(); break;
+                case 3: storeInLogBook(pet,"Was fed by user"); cout<<"You give "<<pet->getNAME()<<" a bowl of food.\n"; break;
+                case 4: return;
+                default: cout<<"Invalid choice.\n"; break;
+            }
+        }
+        // --- CAT MENU ---
+        else if(species=="Cat"){
+            cout<<"1. Play with laser pointer\n2. Brush coat\n3. Feed the cat\n4. Finish Session\nChoice: ";
+            cin>>choice;
+            switch(choice){
+                case 1: storeInLogBook(pet,"Played with laser pointer"); cout<<pet->getNAME()<<" keenly chases the red dot!\n"; pet->makeSound(); break;
+                case 2: storeInLogBook(pet,"Brushed coat"); cout<<"You gently brush "<<pet->getNAME()<<"'s fur.\n"; break;
+                case 3: storeInLogBook(pet,"Was fed by user"); cout<<"You give "<<pet->getNAME()<<" a bowl of food.\n"; break;
+                case 4: return;
+                default: cout<<"Invalid choice.\n"; break;
+            }
+        }
+        // --- OTHER SPECIES MENU (Generic) ---
+        else {
+            cout<<"1. Feed the animal\n2. Clean enclosure\n3. Observe the animal\n4. Finish Session\nChoice: ";
+            cin>>choice;
+            switch(choice){
+                case 1: storeInLogBook(pet,"Was fed by user"); cout<<"You provide fresh food for "<<pet->getNAME()<<".\n"; break;
+                case 2: storeInLogBook(pet,"Enclosure was cleaned"); cout<<"You clean the enclosure for "<<pet->getNAME()<<".\n"; break;
+                case 3: storeInLogBook(pet,"Was observed by user"); cout<<pet->getNAME()<<" seems calm and content.\n"; break;
+                case 4: return;
+                default: cout<<"Invalid choice.\n"; break;
+            }
+        }
+        cout<<"\nActivity logged. Press Enter to continue...";
+        cin.ignore(numeric_limits<streamsize>::max(),'\n');
+        cin.get();
+    }
+}
+
+void AdoptionShelter::logInteractions() {
+    ifstream logFile("interactions.csv");
+    string line;
+    if (!logFile.is_open()) {
+        cout << "\nInteraction log is empty or could not be opened." << endl;
+        return;
+    }
+    cout << "\n--- Animal Interaction Log ---" << endl;
+    cout << "---------------------------------------------------------------------------------------------" << endl;
+    cout << left << setw(10) << "Pet ID" << setw(20) << "Pet Name" << setw(30) << "Activity" << setw(10) << "User ID" << setw(20) << "User Name" << endl;
+    cout << "---------------------------------------------------------------------------------------------" << endl;
+    while (getline(logFile, line)) {
+        stringstream ss(line);
+        string petId, petName, activity, userId, userName;
+        getline(ss, petId, ',');
+        getline(ss, petName, ',');
+        getline(ss, activity, ',');
+        getline(ss, userId, ',');
+        getline(ss, userName, ',');
+        cout << left << setw(10) << petId << setw(20) << petName << setw(30) << activity << setw(10) << userId << setw(20) << userName << endl;
+    }
+    cout << "----------------------------------------------------------------------------------------------------------" << endl;
+    logFile.close();
 }
 
 void AdoptionShelter::showPetManagementMenu(){
@@ -271,10 +373,10 @@ void AdoptionShelter::showPetManagementMenu(){
                 editPetDetails();
                 break;
             case 5:
-                //Play
+                InteractionwithPets();
                 break;
             case 6:
-                //Log
+                logInteractions();
                 break;
             case 7:
                 cout<<"Returning to MAIN MENU..."<<endl;

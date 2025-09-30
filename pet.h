@@ -102,28 +102,14 @@ private:
     void listPets();
     void SearchPet();
     void editPetDetails();
-    
+    void InteractionwithPets();
+    void storeInLogBook(Pet* pet, const string& activity);
+    void logInteractions();
+    Pet* findPetById(const string& id);   //Helper fx. to find pet easily 
 public:
     AdoptionShelter(const User& user);
     ~AdoptionShelter(); 
-
     void showPetManagementMenu();
-   
-
 };
-
-
-
-
-
-
-
-// void addPet();
-// void listPets();
-// void SearchPet();
-// void editPetDetails();
-
-// void PlayWpets();
-// void storePetInteraction(User &current_User);
 
 #endif
