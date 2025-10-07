@@ -11,6 +11,8 @@
                 "main.cpp",
                 "pet.cpp",
                 "Authentication.cpp",
+                "people_manager.cpp",
+                "volunteer_portal.cpp",
                 // IMPORTANT: If you add more .cpp files, add them here!
                 "-o",
                 "shelter_app"

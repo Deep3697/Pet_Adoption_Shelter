@@ -3,6 +3,8 @@
 using namespace std;
 #include "pet.h"
 #include "Authentication.h"
+#include "people_manager.h"
+#include"volunteer_portal.h"
 
 
 void display_MainMenu(const User &current_User){     //if const not used there will be different reference fot .h and .cpp and there will be change in name for whole program instead of one time
@@ -49,6 +51,7 @@ int main(){
     Authentication auth_User;
     User current_User=auth_User.login();
     AdoptionShelter shelter(current_User);
+    PeopleManager peopleMgr;
 
     if(current_User.role==INVALID){
         cout<<"ERROR..Invalid Username! or Password is Incorrect!"<<endl;
@@ -75,6 +78,7 @@ int main(){
             (current_User.role==Volunteer && choice==4)){
             break;
         }
+        cin.ignore(numeric_limits<streamsize>::max(),'\n');
 
         if(current_User.role==Manager){
             switch(choice){
@@ -82,7 +86,7 @@ int main(){
                     shelter.showPetManagementMenu();
                     break;
                 case 2:
-                    //People Management
+                    peopleMgr.showPeopleManagementMenu(current_User);
                     break;
                 case 3:
                     //Adoption Workflow
@@ -113,10 +117,10 @@ int main(){
         else if(current_User.role==Staff){
             switch(choice){
                 case 1:
-                    //Pet Management
+                    shelter.showPetManagementMenu();
                     break;
                 case 2:
-                    //People Management
+                    peopleMgr.showPeopleManagementMenu(current_User);
                     break;
                 case 3:
                     //Adoption Workflow
@@ -133,26 +137,10 @@ int main(){
             }
         }
         else if(current_User.role==Volunteer){
-            switch(choice){
-                case 1:
-                    //Assigned Task
-                    break;
-                case 2:
-                    //Pet Care
-                    break;
-                case 3:
-                    //View Kennel Occupancy
-                    break;
-                case 4:
-                    //Exit
-                    break;
-                default:
-                    //ERROR
-                    break;
-            }
+            VolunteerPortal portal(current_User);
+            portal.runVolunteerMenu(); 
         }
         cout<<"Press Enter to Continue..."<<endl;
-        cin.ignore(numeric_limits<streamsize>::max(),'\n');
         cin.get();
     }
 
