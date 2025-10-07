@@ -108,6 +108,7 @@ private:
     Pet* findPetById(const string& id);   //Helper fx. to find pet easily 
 public:
     AdoptionShelter(const User& user);
+    void removePet(const string& petId);
     ~AdoptionShelter(); 
     void showPetManagementMenu();
 };

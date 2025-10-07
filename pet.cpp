@@ -30,6 +30,21 @@ void Pet::displayDetails(){
     cout<<left<<setw(10)<<id<<setw(20)<<name<<setw(15)<<species<<setw(20)<<breed<<setw(5)<<age<<endl;
 }
 
+void AdoptionShelter::removePet(const string& petId){
+    // Find the pet with the matching ID
+    auto it=std::remove_if(pets.begin(),pets.end(),[&](Pet* pet){
+        if(pet->getID()==petId){
+            delete pet; // Free the memory for the object
+            return true; // Mark this element for removal
+        }
+        return false;
+    });
+    // Erase the now-invalid elements from the vector
+    if(it!=pets.end()){
+        pets.erase(it,pets.end());
+        cout<<"\nNotification: Pet with ID "<<petId<<" has been adopted and removed from the shelter.\n";
+    }
+}
 
 
 PetID_Generator::PetID_Generator(){
