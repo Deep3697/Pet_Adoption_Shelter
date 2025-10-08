@@ -6,6 +6,8 @@ using namespace std;
 #include "people_manager.h"
 #include"volunteer_portal.h"
 #include "adoption_manager.h"
+#include "facility_manager.h"
+
 
 
 void display_MainMenu(const User &current_User){     //if const not used there will be different reference fot .h and .cpp and there will be change in name for whole program instead of one time
@@ -54,6 +56,7 @@ int main(){
     AdoptionShelter shelter(current_User);
     PeopleManager peopleMgr;
     AdoptionManager adoptionMgr(current_User,shelter);
+    FacilityManager facilityMgr(current_User);
 
     if(current_User.role==INVALID){
         cout<<"ERROR..Invalid Username! or Password is Incorrect!"<<endl;
@@ -94,7 +97,7 @@ int main(){
                     adoptionMgr.showAdoptionWorkflowMenu();
                     break;
                 case 4:
-                    //Facility Management
+                    facilityMgr.showFacilityManagementMenu();
                     break;
                 case 5:
                     //Inventory & Financials
@@ -128,7 +131,7 @@ int main(){
                     adoptionMgr.showAdoptionWorkflowMenu();
                     break;
                 case 4:
-                    //Facility Management
+                    facilityMgr.showFacilityManagementMenu();
                     break;
                 case 5:
                     //Exit

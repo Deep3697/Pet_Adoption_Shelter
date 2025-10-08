@@ -18,6 +18,7 @@ private:
 
     void viewAndEditPersonProfile();
     void displayInteractionHistory(const string& personId);
+    void displayAdoptionHistory(const string& adopterId);
     void editPersonDetails(const string& personId, const string& filename);
 
     void assignTaskToVolunteer();

@@ -75,6 +75,36 @@ void PeopleManager::displayInteractionHistory(const string& personId){
     logFile.close();
 }
 
+
+
+void PeopleManager::displayAdoptionHistory(const string& adopterId){
+    ifstream appFile("applications.csv");
+    if(!appFile.is_open()){ return; }
+
+    cout<<"\n---- Adoption History ----\n";
+    string line;
+    bool foundHistory=false;
+    while(getline(appFile,line)){
+        stringstream ss(line);
+        string appId, currentAdopterId, adopterName, petId, petName, status;
+        getline(ss,appId,',');
+        getline(ss,currentAdopterId,',');
+        getline(ss,adopterName,',');
+        getline(ss,petId,',');
+        getline(ss,petName,',');
+        getline(ss,status,',');
+
+        if(currentAdopterId==adopterId && status=="Approved"){
+            foundHistory=true;
+            cout<<"- Adopted Pet: "<<petName<<" (ID: "<<petId<<")\n";
+        }
+    }
+    if(!foundHistory){
+        cout<<"No approved adoption history found for this person.\n";
+    }
+    appFile.close();
+}
+
 void PeopleManager::viewAndEditPersonProfile(){
     string searchId;
     cout<<"\nEnter the ID of the person to view (e.g., 101, X102): ";
@@ -109,17 +139,19 @@ void PeopleManager::viewAndEditPersonProfile(){
                 string name,address,phone;
                 getline(ss,name,','); getline(ss,address,','); getline(ss,phone,',');
                 cout<<"ID:"<<id<<endl<<"Name: "<<name<<endl<<"Address: "<<address<<endl<<"Phone: "<<phone<<endl;
-            }
-            else{
+            }else{
                 string password,name,role;
                 getline(ss,password,','); getline(ss,name,','); getline(ss,role,',');
                 cout<<"ID:"<<id<<endl<<"Name: "<<name<<endl<<"Role: "<<role<<endl;
             }
 
-            // Display interaction history
-            displayInteractionHistory(id);
-
-            // Action submenu
+            // --- THIS IS THE CHANGED PART ---
+            // It now checks which type of person it is and shows the correct history.
+            if(filename=="adopters.csv"){
+                displayAdoptionHistory(id);
+            }else{
+                displayInteractionHistory(id);
+            }
             cout<<"\n---- Options: ----\n";
             cout<<"1. Edit This Person's Details\n";
             cout<<"2. Go Back\n";
@@ -470,7 +502,14 @@ void PeopleManager::showPeopleManagementMenu(const User& loggedInUser){
         cout<<"Enter Your Choice: ";
         cin>>choice;
 
-        if(cin.fail()) continue;
+        if(cin.fail()){
+            cout<<"Invalid Input.Please Enter the Valid Nubmber."<<endl;
+            cin.clear();
+            cout<<"Press Enter to Continue..."<<endl;
+            cin.ignore(numeric_limits<streamsize>::max(),'\n');
+            cin.get();
+            continue;
+        }
         cin.ignore(numeric_limits<streamsize>::max(),'\n');
 
         switch(choice){

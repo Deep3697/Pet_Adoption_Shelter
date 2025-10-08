@@ -114,10 +114,10 @@ void VolunteerPortal::viewKennelOccupancy(){
     }
     petFile.close();
 
-    cout<<"\n--- Kennel Capacity Summary ---\n";
-    cout<<"-------------------------------------------------\n";
+    cout<<"\n----- Kennel Capacity Summary -----\n";
+    cout<<"-------------------------------------------------------------------------\n";
     cout<<left<<setw(15)<<"Species"<<setw(15)<<"Occupied"<<setw(15)<<"Available"<<"\n";
-    cout<<"-------------------------------------------------\n";
+    cout<<"-------------------------------------------------------------------------\n";
 
     for(const auto& pair:capacities){
         string species=pair.first;
@@ -126,7 +126,7 @@ void VolunteerPortal::viewKennelOccupancy(){
         int available=capacity-occupied;
         cout<<left<<setw(15)<<species<<setw(15)<<occupied<<setw(15)<<available<<"\n";
     }
-    cout<<"-------------------------------------------------\n";
+    cout<<"-------------------------------------------------------------------------\n";
     cout<<endl<<"The Kennel Number is According to their Respective Pet IDs!!!"<<endl;
 }
 
@@ -277,9 +277,12 @@ void VolunteerPortal::runVolunteerMenu(){
         cin>>choice;
 
         if(cin.fail()){
+            cout<<"Invalid Input.Please Enter the Valid Nubmber."<<endl;
             cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            cout<<"Invalid choice.\n";
+            cout<<"Press Enter to Continue..."<<endl;
+            cin.ignore(numeric_limits<streamsize>::max(),'\n');
+            cin.get();
+            continue;
         }
         else{
             cin.ignore(numeric_limits<streamsize>::max(), '\n');

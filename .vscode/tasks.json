@@ -14,6 +14,7 @@
                 "people_manager.cpp",
                 "volunteer_portal.cpp",
                 "adoption_manager.cpp",
+                "facility_manager.cpp",
                 // IMPORTANT: If you add more .cpp files, add them here!
                 "-o",
                 "shelter_app"
