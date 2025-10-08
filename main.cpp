@@ -63,91 +63,95 @@ int main(){
         return 1;
     }
 
-    int choice=0;
-    while(true){
-        system("cls");
-        display_MainMenu(current_User);
-        cin>>choice;
+    
+    if(current_User.role==Manager || current_User.role==Staff){
+        int choice=0;
+        while(true){
+            system("cls");
+            display_MainMenu(current_User);
+            cin>>choice;
 
-        if(cin.fail()){
-            cout<<"Invalid Input.Please Enter the Valid Nubmber."<<endl;
-            cin.clear();
-            cout<<"Press Enter to Continue..."<<endl;
+            if(cin.fail()){
+                cout<<"Invalid Input.Please Enter the Valid Nubmber."<<endl;
+                cin.clear();
+                cout<<"Press Enter to Continue..."<<endl;
+                cin.ignore(numeric_limits<streamsize>::max(),'\n');
+                cin.get();
+                continue;
+            }
+
+            if((current_User.role==Manager && choice==9)||
+                (current_User.role==Staff && choice==5)||
+                (current_User.role==Volunteer && choice==4)){
+                break;
+            }
             cin.ignore(numeric_limits<streamsize>::max(),'\n');
-            cin.get();
-            continue;
-        }
 
-        if((current_User.role==Manager && choice==9)||
-            (current_User.role==Staff && choice==5)||
-            (current_User.role==Volunteer && choice==4)){
-            break;
-        }
-        cin.ignore(numeric_limits<streamsize>::max(),'\n');
-
-        if(current_User.role==Manager){
-            switch(choice){
-                case 1:
-                    shelter.showPetManagementMenu();
-                    break;
-                case 2:
-                    peopleMgr.showPeopleManagementMenu(current_User);
-                    break;
-                case 3:
-                    adoptionMgr.showAdoptionWorkflowMenu();
-                    break;
-                case 4:
-                    facilityMgr.showFacilityManagementMenu();
-                    break;
-                case 5:
-                    //Inventory & Financials
-                    break;
-                case 6:
-                    //Events & Fostering
-                    break;
-                case 7:
-                    //Lost & Found
-                    break;
-                case 8:
-                    //Reports & Analytics
-                    break;
-                case 9:
-                    //Exit
-                    break;
-                default:
-                    //ERROR
-                    break;
+            if(current_User.role==Manager){
+                switch(choice){
+                    case 1:
+                        shelter.showPetManagementMenu();
+                        break;
+                    case 2:
+                        peopleMgr.showPeopleManagementMenu(current_User);
+                        break;
+                    case 3:
+                        adoptionMgr.showAdoptionWorkflowMenu();
+                        break;
+                    case 4:
+                        facilityMgr.showFacilityManagementMenu();
+                        break;
+                    case 5:
+                        //Inventory & Financials
+                        break;
+                    case 6:
+                        //Events & Fostering
+                        break;
+                    case 7:
+                        //Lost & Found
+                        break;
+                    case 8:
+                        //Reports & Analytics
+                        break;
+                    case 9:
+                        //Exit
+                        break;
+                    default:
+                        //ERROR
+                        break;
+                }
             }
-        }
-        else if(current_User.role==Staff){
-            switch(choice){
-                case 1:
-                    shelter.showPetManagementMenu();
-                    break;
-                case 2:
-                    peopleMgr.showPeopleManagementMenu(current_User);
-                    break;
-                case 3:
-                    adoptionMgr.showAdoptionWorkflowMenu();
-                    break;
-                case 4:
-                    facilityMgr.showFacilityManagementMenu();
-                    break;
-                case 5:
-                    //Exit
-                    break;
-                default:
-                    //ERROR
-                    break;
+            else if(current_User.role==Staff){
+                switch(choice){
+                    case 1:
+                        shelter.showPetManagementMenu();
+                        break;
+                    case 2:
+                        peopleMgr.showPeopleManagementMenu(current_User);
+                        break;
+                    case 3:
+                        adoptionMgr.showAdoptionWorkflowMenu();
+                        break;
+                    case 4:
+                        facilityMgr.showFacilityManagementMenu();
+                        break;
+                    case 5:
+                        //Exit
+                        break;
+                    default:
+                        //ERROR
+                        break;
+                }
             }
-        }
-        else if(current_User.role==Volunteer){
-            VolunteerPortal portal(current_User);
-            portal.runVolunteerMenu(); 
         }
         cout<<"Press Enter to Continue..."<<endl;
         cin.get();
     }
+    else if(current_User.role==Volunteer){
+        VolunteerPortal portal(current_User);
+        portal.runVolunteerMenu();
+    }
+    
 
     cout<<endl<<endl<<"Thank You for Visiting our Site."<<endl;
     Sleep(3000);

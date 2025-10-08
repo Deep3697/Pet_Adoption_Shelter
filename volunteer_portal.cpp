@@ -46,6 +46,8 @@ void VolunteerPortal::markTaskAsComplete(int taskNumber, const vector<string>& u
 
 
 void VolunteerPortal::viewMyTasks(){
+    system("cls");
+    cout<<"---- Tasks ----"<<endl;
     ifstream taskFile("tasks.csv");
     if(!taskFile.is_open()){ cout<<"\nNo tasks assigned yet.\n"; return; }
 
@@ -113,6 +115,7 @@ void VolunteerPortal::viewKennelOccupancy(){
         }
     }
     petFile.close();
+    system("cls");
 
     cout<<"\n----- Kennel Capacity Summary -----\n";
     cout<<"-------------------------------------------------------------------------\n";
@@ -170,6 +173,8 @@ Pet* VolunteerPortal::findAndCreatePet(const string& petId){
 
 
 void VolunteerPortal::performPetCare(){
+    system("cls");
+    cout<<"---- Pet Care ----"<<endl;
     string searchId;
     cout<<"\nEnter the ID of the pet you want to interact with: ";
     cin>>searchId;
@@ -267,8 +272,9 @@ void VolunteerPortal::runVolunteerMenu(){
     int choice=0;
     while(true){
         system("cls");
-        cout<<"----- VOLUNTEER PORTAL -----\n";
+        cout<<"------ MAIN MENU ------\n";
         cout<<"Welcome, "<<currentUser.name<<"!\n\n";
+        cout<<" VOlunteer Menu..."<<endl;
         cout<<"1. View & Complete My Assigned Tasks\n";
         cout<<"2. Perform Pet Care\n";
         cout<<"3. View Kennel Occupancy\n";
