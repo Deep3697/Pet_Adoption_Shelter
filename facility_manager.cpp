@@ -166,7 +166,7 @@ string FacilityManager::generateNewRequestId(){
             string id;
             getline(stringstream(line),id,',');
             if(id.rfind("M",0)==0){
-                try{ maxId=max(maxId,stoi(id.substr(1)));} catch(...){}
+                try{ maxId=max(maxId,stoi(id.substr(1)));} catch(const invalid_argument &e){}
             }
         }
     }
@@ -345,7 +345,8 @@ void FacilityManager::showFacilityManagementMenu(){
                 case 5: return;
                 default: cout<<"Invalid Choice.\n"; break;
             }
-            cout<<"\nPress Enter to continue...";
+            cin.clear();
+            cout<<"Press Enter to continue"<<endl;
             cin.get();
         }
     }

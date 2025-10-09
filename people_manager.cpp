@@ -37,15 +37,22 @@ void PeopleManager::editPersonDetails(const string& personId,const string& filen
                 getline(ss_original,oldRole,',');
                 tempFile<<id<<","<<oldPassword<<","<<newName<<","<<oldRole<<"\n";
             }
-            cout<<"Details updated.\n";
         }else{
             tempFile<<line<<"\n"; // Copy unchanged line to the tempfile then we will rename it and delete old one
         }
     }
     inputFile.close();
     tempFile.close();
-    remove(filename.c_str());
-    rename("temp.csv",filename.c_str());
+    if(remove(filename.c_str()) != 0){
+        perror("Error deleting original file. Is it open in another program?");
+    } else {
+        if(rename("temp.csv", filename.c_str()) != 0){
+            perror("Error renaming temporary file");
+        } else {
+            cout<<"\nDetails updated successfully.\n";
+        }
+    }
+
 }
 
 void PeopleManager::displayInteractionHistory(const string& personId){
@@ -144,31 +151,33 @@ void PeopleManager::viewAndEditPersonProfile(){
                 getline(ss,password,','); getline(ss,name,','); getline(ss,role,',');
                 cout<<"ID:"<<id<<endl<<"Name: "<<name<<endl<<"Role: "<<role<<endl;
             }
-
-            // --- THIS IS THE CHANGED PART ---
-            // It now checks which type of person it is and shows the correct history.
-            if(filename=="adopters.csv"){
-                displayAdoptionHistory(id);
-            }else{
-                displayInteractionHistory(id);
-            }
-            cout<<"\n---- Options: ----\n";
-            cout<<"1. Edit This Person's Details\n";
-            cout<<"2. Go Back\n";
-            cout<<"Enter your choice: ";
-            int choice=0;
-            cin>>choice;
-            cin.ignore(numeric_limits<streamsize>::max(),'\n');
-
-            if(choice==1){
-                editPersonDetails(id,filename);
-            }
-            break; 
+            break;
         }
     }
     file.close();
+
     if(!found){
         cout<<"Person with ID "<<searchId<<" not found.\n";
+        return;
+    }
+    if(filename=="adopters.csv"){
+        displayAdoptionHistory(searchId);
+    }else{
+        displayInteractionHistory(searchId);
+    }
+    cout<<"\n---- Options: ----\n";
+    cout<<"1. Edit This Person's Details\n";
+    cout<<"2. Go Back\n";
+    cout<<"Enter your choice: ";
+    int choice=0;
+    cin>>choice;
+    cin.ignore(numeric_limits<streamsize>::max(),'\n');
+
+    if(choice==1){
+        editPersonDetails(searchId,filename);
+    }
+    else{
+        return;
     }
 }
 
@@ -201,6 +210,7 @@ void PeopleManager::listAllVolunteers(){
     }
     cout<<"-------------------------------------------------------------------------\n";
     userFile.close();
+    return;
 }
 
 void PeopleManager::listAllAdopters(){
@@ -240,7 +250,7 @@ int PeopleManager::getLastIdFromFile(const string& filename, const string& prefi
         if(line.empty() || line.rfind(prefix,0)!=0) continue;
         try{
             maxId=max(maxId,stoi(line.substr(prefix.length())));
-        }catch(...){}
+        }catch(const invalid_argument &e){}
     }
     file.close();
     return maxId==0 ? 100 : maxId;
@@ -373,12 +383,33 @@ bool PeopleManager::findPetById(const string& petId, string& outName, string& ou
     return false;
 }
 
+bool PeopleManager::findVolunteerById(const string& volId, string& outName){
+    ifstream userFile("users.csv");
+    if(!userFile.is_open()){return false;}
+    string line;
+    while(getline(userFile,line)){
+        stringstream ss(line);
+        string id, password, name, role;
+        getline(ss,id,',');
+        getline(ss,password,',');
+        getline(ss,name,',');
+        getline(ss,role,',');
+        if(id==volId && role=="Volunteer"){
+            outName=name;
+            userFile.close();
+            return true;
+        }
+    }
+    userFile.close();
+    return false; 
+}
+
 void PeopleManager::assignTaskToVolunteer(){
     string volId, petId, volName, petName, petSpecies;
     cout<<"\n---- Assign Task ----\n";
     cout<<"Enter ID of Volunteer to assign task to: ";
     getline(cin,volId);
-    if(!findPersonById(volId,"users.csv",volName)){
+    if(!findVolunteerById(volId,volName)){
         cout<<"Error: Volunteer with ID "<<volId<<" not found."<<endl;
         return;
     }
@@ -511,7 +542,6 @@ void PeopleManager::showPeopleManagementMenu(const User& loggedInUser){
             continue;
         }
         cin.ignore(numeric_limits<streamsize>::max(),'\n');
-
         switch(choice){
             case 1:
                 registerNewPerson();
@@ -544,7 +574,8 @@ void PeopleManager::showPeopleManagementMenu(const User& loggedInUser){
                 cout<<"Invalid Choice.\n";
                 break;
         }
-        cout<<"Press Enter to continue..."<<endl;
+        cin.clear();
+        cout<<"Press Enter to continue"<<endl;
         cin.get();
     }
 }

@@ -7,6 +7,7 @@ using namespace std;
 #include"volunteer_portal.h"
 #include "adoption_manager.h"
 #include "facility_manager.h"
+#include "financial_manager.h"
 
 
 
@@ -36,10 +37,7 @@ void display_MainMenu(const User &current_User){     //if const not used there w
     if(role==Manager){
         cout<<
         "5. Inventory & Financials"<<endl<<
-        "6. Events & Fostering "<<endl<<
-        "7. Lost & Found"<<endl<<
-        "8. Reports & Analytics"<<endl<<
-        "9. Exit"<<endl;
+        "6. Exit"<<endl;
         cout<<"Enter Your Choice:";
     }
     else if(role==Staff){
@@ -53,18 +51,19 @@ void display_MainMenu(const User &current_User){     //if const not used there w
 int main(){
     Authentication auth_User;
     User current_User=auth_User.login();
-    AdoptionShelter shelter(current_User);
-    PeopleManager peopleMgr;
-    AdoptionManager adoptionMgr(current_User,shelter);
-    FacilityManager facilityMgr(current_User);
 
     if(current_User.role==INVALID){
         cout<<"ERROR..Invalid Username! or Password is Incorrect!"<<endl;
         return 1;
     }
-
-    
+  
     if(current_User.role==Manager || current_User.role==Staff){
+        AdoptionShelter shelter(current_User);
+        PeopleManager peopleMgr;
+        AdoptionManager adoptionMgr(current_User,shelter);
+        FacilityManager facilityMgr(current_User);
+        FinancialManager financeMgr(current_User);
+
         int choice=0;
         while(true){
             system("cls");
@@ -80,9 +79,8 @@ int main(){
                 continue;
             }
 
-            if((current_User.role==Manager && choice==9)||
-                (current_User.role==Staff && choice==5)||
-                (current_User.role==Volunteer && choice==4)){
+            if((current_User.role==Manager && choice==6)||
+                (current_User.role==Staff && choice==5)){
                 break;
             }
             cin.ignore(numeric_limits<streamsize>::max(),'\n');
@@ -102,22 +100,13 @@ int main(){
                         facilityMgr.showFacilityManagementMenu();
                         break;
                     case 5:
-                        //Inventory & Financials
+                        financeMgr.showFinancialMenu();
                         break;
                     case 6:
-                        //Events & Fostering
-                        break;
-                    case 7:
-                        //Lost & Found
-                        break;
-                    case 8:
-                        //Reports & Analytics
-                        break;
-                    case 9:
                         //Exit
                         break;
                     default:
-                        //ERROR
+                        cout<<"Invalid Choice."<<endl;
                         break;
                 }
             }
@@ -136,14 +125,16 @@ int main(){
                         facilityMgr.showFacilityManagementMenu();
                         break;
                     case 5:
-                        //Exit
+                        //EXIT
                         break;
                     default:
-                        //ERROR
+                        cout<<"Invalid Choice."<<endl;
                         break;
                 }
             }
         }
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(),'\n');
         cout<<"Press Enter to Continue..."<<endl;
         cin.get();
     }

@@ -300,7 +300,8 @@ void VolunteerPortal::runVolunteerMenu(){
                 default: cout<<"Invalid choice.\n"; break;
             }
         }
-        cout<<"\nPress Enter to continue...";
+        cin.clear();
+        cout<<"Press Enter to continue"<<endl;
         cin.get();
     }
 }

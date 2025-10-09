@@ -22,6 +22,8 @@ private:
     void editPersonDetails(const string& personId, const string& filename);
 
     void assignTaskToVolunteer();
+    bool findVolunteerById(const string& volId, string& outName);
+
     bool findPersonById(const string& personId, const string& filename, string& outName);
     bool findPetById(const string& petId, string& outName, string& outSpecies);
 };

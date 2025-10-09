@@ -133,7 +133,7 @@ void AdoptionShelter::Load_Data_From_File(){
             else if (species == "Horse") pets.push_back(new Horse(id, name, breed, age));
             else if (species == "Turtle") pets.push_back(new Turtle(id, name, breed, age));
             else if (species == "Rabbit") pets.push_back(new Rabbit(id, name, breed, age));
-        } catch (...) { /* ignore malformed lines */ }
+        } catch (const invalid_argument &e){ /* ignore malformed lines */ }
     }
     cout << pets.size() << " pets loaded from pets.csv." << endl;
     petFile.close();
@@ -148,7 +148,7 @@ void AdoptionShelter::save_File() {
 }
 
 void AdoptionShelter::listPets() {
-    cout << "\n--- List of All Shelter Pets ---" << endl;
+    cout << "\n----- List of All Shelter Pets -----" << endl;
     
     if(pets.empty()){
         cout<<"The shelter is currently empty."<<endl;
@@ -188,7 +188,9 @@ void AdoptionShelter::SearchPet() {
     bool found = false;
     for (Pet* pet : pets) {
         if (pet->getID() == searchId) {
-            cout << "\n--- Pet Found! ---" << endl;
+            cout << "\n------ Pet Found! ------" << endl;
+            cout << left << setw(10) << "ID" << setw(20) << "Name" << setw(15) << "Species" << setw(20) << "Breed" << setw(5) << "Age" << endl;
+            cout << "----------------------------------------------------------------------------------------" << endl;
             pet->displayDetails();
             found = true;
             break;
@@ -200,7 +202,7 @@ void AdoptionShelter::SearchPet() {
 void AdoptionShelter::addPet() {
     string name, species, breed;
     int age, choice;
-    cout << "\n--- Add New Pet ---\nSelect Species:\n1. Dog\n2. Cat\n3. Cow\n4. Horse\n5. Parrot\n6. Turtle\n7. Rabbit\nChoice: ";
+    cout << "\n------ Add New Pet ------\nSelect Species:\n1. Dog\n2. Cat\n3. Cow\n4. Horse\n5. Parrot\n6. Turtle\n7. Rabbit\nChoice: ";
     cin >> choice;
     switch (choice) {
         case 1: species = "Dog"; break;
@@ -401,8 +403,9 @@ void AdoptionShelter::showPetManagementMenu(){
                 cout<<"Invalid Input!"<<endl;
                 break;
         }
-        cout<<"Press Enter to continue"<<endl;
+        cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(),'\n');
+        cout<<"Press Enter to continue"<<endl;
         cin.get();
     }
 }
